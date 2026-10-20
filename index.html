@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Habiba OS 💖</title>
+<style>
+  :root {
+    --bg-dark: #0f081d;
+    --bg-grad: linear-gradient(135deg, #0f051d 0%, #291136 50%, #431238 100%);
+    --primary: #ff5e97;
+    --primary-glow: rgba(255, 94, 151, 0.5);
+    --secondary: #ffb8d1;
+    --gold: #ffd166;
+    --glass: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --text: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body, html {
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--text);
+  }
+
+  /* Phone Container */
+  #phone {
+    width: 100%;
+    max-width: 450px;
+    height: 100dvh;
+    margin: 0 auto;
+    position: relative;
+    background: var(--bg-grad);
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  }
+
+  /* Animated Background Particles */
+  #bg-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 36px;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Screens General */
+  .screen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    padding-top: 36px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ================= 1. SPLASH SCREEN ================= */
+  #splash-screen {
+    z-index: 200;
+    background: radial-gradient(circle at center, #2b0f3a 0%, #090312 100%);
+    justify-content: center;
+    align-items: center;
+    padding-top: 0;
+  }
+
+  .splash-logo {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .splash-logo svg {
+    width: 90px;
+    height: 90px;
+    filter: drop-shadow(0 0 20px var(--primary));
+    animation: pulseHeart 1.5s infinite ease-in-out;
+  }
+
+  @keyframes pulseHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.14); }
+  }
+
+  .splash-title {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(to right, #ff7eb3, #ffd166);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .splash-sub {
+    font-size: 14px;
+    color: var(--secondary);
+    margin-bottom: 35px;
+    opacity: 0.85;
+  }
+
+  .loader-bar {
+    width: 200px;
+    height: 6px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .loader-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--gold));
+    border-radius: 10px;
+    transition: width 0.2s ease;
+  }
+
+  /* ================= 2. LOCK SCREEN ================= */
+  #lock-screen {
+    justify-content: space-between;
+    align-items: center;
+    padding: 55px 20px 30px;
+    backdrop-filter: blur(4px);
+  }
+
+  .lock-top {
+    text-align: center;
+  }
+
+  .lock-Clock {
+    font-size: 56px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 20px rgba(255,94,151,0.4);
+  }
+
+  .lock-date {
+    font-size: 15px;
+    color: var(--secondary);
+    margin-top: 4px;
+  }
+
+  .lock-notif {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    padding: 14px 16px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    animation: floatNotif 3s infinite ease-in-out;
+  }
+
+  @keyframes floatNotif {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .notif-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), #ff2a75);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .notif-text h4 {
+    font-size: 13px;
+    color: var(--gold);
+    margin-bottom: 3px;
+  }
+
+  .notif-text p {
+    font-size: 13px;
+    color: #fff;
+  }
+
+  .pass-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pass-prompt {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--secondary);
+  }
+
+  .pass-display {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--glass-border);
+    padding: 10px 24px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    min-width: 230px;
+    text-align: center;
+    color: var(--gold);
+    direction: ltr;
+  }
+
+  .pass-hint {
+    font-size: 12px;
+    color: #ff9ebb;
+    min-height: 18px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 260px;
+    direction: ltr;
+  }
+
+  .key {
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .key:active {
+    background: var(--primary);
+    transform: scale(0.92);
+  }
+
+  .shake {
+    animation: shakeAnim 0.4s ease;
+  }
+
+  @keyframes shakeAnim {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-8px); }
+  }
+
+  /* ================= 3. HOME SCREEN ================= */
+  #home-screen {
+    padding: 50px 18px 25px;
+    justify-content: space-between;
+  }
+
+  .welcome-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .welcome-banner h2 {
+    font-size: 22px;
+    background: linear-gradient(to left, #fff, var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .welcome-banner span {
+    font-size: 12px;
+    background: rgba(255, 94, 151, 0.25);
+    border: 1px solid var(--primary);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: var(--gold);
+  }
+
+  /* Counter Widget */
+  .counter-widget {
+    background: linear-gradient(135deg, rgba(255, 94, 151, 0.22), rgba(114, 28, 148, 0.35));
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 18px 14px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+  }
+
+  .counter-title {
+    font-size: 14px;
+    color: var(--secondary);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .counter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .count-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 10px 4px;
+  }
+
+  .count-num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--gold);
+  }
+
+  .count-label {
+    font-size: 11px;
+    color: #ddd;
+    margin-top: 2px;
+  }
+
+  .counter-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 10px;
+  }
+
+  /* App Icons Grid */
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 14px;
+    margin: auto 0;
+    padding: 10px 0;
+  }
+
+  .app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .app-item:active {
+    transform: scale(0.9);
+  }
+
+  .app-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    margin-bottom: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    position: relative;
+  }
+
+  .icon-galaxy { background: linear-gradient(135deg, #1f1147, #6f2dbd); }
+  .icon-jar    { background: linear-gradient(135deg, #ff5e97, #ff9a76); }
+  .icon-open   { background: linear-gradient(135deg, #e056fd, #686de0); }
+  .icon-chat   { background: linear-gradient(135deg, #00b894, #00cec9); }
+  .icon-scan   { background: linear-gradient(135deg, #fd79a8, #6c5ce7); }
+  .icon-vip    { background: linear-gradient(135deg, #f6d365, #fda085); }
+
+  .app-name {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  /* Bottom Dock */
+  .home-dock {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    border-radius: 24px;
+    padding: 12px 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--secondary);
+  }
+
+  /* ================= APP SUB-SCREENS HEADER ================= */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .app-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .app-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    position: relative;
+  }
+
+  /* ================= APP 1: OUR GALAXY ================= */
+  #galaxy-screen .app-body {
+    padding: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at bottom, #1b0a33 0%, #05020a 100%);
+  }
+
+  .galaxy-hint {
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--glass-border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--secondary);
+    z-index: 15;
+    white-space: nowrap;
+  }
+
+  #constellation-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .star-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .star-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 10%, var(--gold) 60%, transparent 100%);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px var(--gold);
+    animation: twinkle 2s infinite alternate;
+    transition: all 0.3s;
+  }
+
+  .star-node.visited .star-circle {
+    background: radial-gradient(circle, #fff 20%, var(--primary) 70%, transparent 100%);
+    box-shadow: 0 0 25px var(--primary);
+  }
+
+  .star-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+    background: rgba(0,0,0,0.65);
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  @keyframes twinkle {
+    from { transform: scale(0.92); opacity: 0.85; }
+    to { transform: scale(1.08); opacity: 1; }
+  }
+
+  /* Big Center Star */
+  #big-star {
+    position: absolute;
+    top: 48%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 16;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  #big-star.unlocked {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .big-star-circle {
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 20%, #ffd166 55%, #ff5e97 100%);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 38px;
+    box-shadow: 0 0 40px #ffd166, 0 0 70px #ff5e97;
+    animation: pulseHeart 1.4s infinite;
+  }
+
+  /* ================= APP 2: HAPPINESS JAR ================= */
+  .jar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
+
+  .jar-svg-box {
+    width: 200px;
+    height: 250px;
+    cursor: pointer;
+    position: relative;
+    margin: 15px 0;
+    transition: transform 0.2s;
+  }
+
+  .jar-svg-box:active {
+    transform: scale(0.94) rotate(-3deg);
+  }
+
+  .jar-wobble {
+    animation: jarShake 0.5s ease;
+  }
+
+  @keyframes jarShake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-8deg) scale(1.05); }
+    50% { transform: rotate(8deg) scale(1.05); }
+    75% { transform: rotate(-5deg); }
+  }
+
+  .jar-note-card {
+    background: linear-gradient(135deg, #fffdf9, #ffeef5);
+    color: #2b0f3a;
+    padding: 22px 18px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 340px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    border: 2px solid var(--primary);
+    margin-top: 10px;
+    transition: all 0.35s ease;
+  }
+
+  .jar-note-num {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+
+  .jar-note-text {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  .jar-btn {
+    margin-top: 18px;
+    background: linear-gradient(90deg, var(--primary), #ff8da1);
+    border: none;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px var(--primary-glow);
+  }
+
+  /* ================= APP 3: OPEN WHEN ENVELOPES ================= */
+  .envelopes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 20px;
+  }
+
+  .env-card {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .env-card:active {
+    transform: scale(0.97);
+    background: rgba(255,94,151,0.2);
+  }
+
+  .env-icon {
+    width: 50px; height: 50px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255,94,151,0.3), rgba(255,209,102,0.3));
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .env-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #fff;
+  }
+
+  /* ================= APP 4: MINI CHAT ================= */
+  #chat-screen .app-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+
+  .bubble {
+    max-width: 82%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .bubble.him {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.13);
+    border: 1px solid var(--glass-border);
+    border-bottom-right-radius: 4px;
+    color: #fff;
+  }
+
+  .bubble.her {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--primary), #d81b60);
+    border-bottom-left-radius: 4px;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .chat-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .chat-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 10px 8px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .chat-btn:active {
+    background: var(--primary);
+  }
+
+  /* ================= APP 5: FINGERPRINT SCANNER ================= */
+  .scanner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    text-align: center;
+  }
+
+  .fp-pad {
+    width: 150px;
+    height: 180px;
+    border-radius: 75px;
+    border: 2px solid var(--primary);
+    background: rgba(255, 94, 151, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 94, 151, 0.25);
+  }
+
+  .fp-pad svg {
+    width: 95px;
+    height: 95px;
+    stroke: var(--secondary);
+    transition: stroke 0.3s;
+  }
+
+  .fp-pad.scanning svg {
+    stroke: var(--gold);
+    filter: drop-shadow(0 0 10px var(--gold));
+  }
+
+  .scan-laser {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: var(--gold);
+    box-shadow: 0 0 15px 4px var(--gold);
+    display: none;
+  }
+
+  .fp-pad.scanning .scan-laser {
+    display: block;
+    animation: scanMove 1.2s infinite alternate ease-in-out;
+  }
+
+  @keyframes scanMove {
+    from { top: 5%; }
+    to { top: 92%; }
+  }
+
+  .scan-result-box {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 18px;
+    min-height: 155px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .scan-Compliment {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gold);
+    margin: 8px 0;
+  }
+
+  /* ================= APP 6: VIP CERTIFICATE ================= */
+  .cert-card {
+    background: linear-gradient(135deg, #2a0e38, #14051e);
+    border: 2px solid var(--gold);
+    border-radius: 24px;
+    padding: 24px 18px;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(255, 209, 102, 0.25);
+    position: relative;
+  }
+
+  .cert-badge {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+
+  .cert-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .cert-name {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--primary);
+    margin: 10px 0;
+    text-shadow: 0 0 12px var(--primary-glow);
+  }
+
+  .cert-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #eee;
+    margin-bottom: 18px;
+  }
+
+  /* ================= MODAL POPUP ================= */
+  .modal-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    z-index: 150;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 22px;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .modal-card {
+    background: linear-gradient(145deg, #2e1142, #170726);
+    border: 1.5px solid var(--gold);
+    border-radius: 24px;
+    padding: 24px 20px;
+    width: 100%;
+    max-height: 80dvh;
+    overflow-y: auto;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  }
+
+  .modal-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+
+  .modal-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .modal-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #fff;
+    white-space: pre-line;
+    margin-bottom: 20px;
+  }
+
+  .modal-close {
+    background: linear-gradient(90deg, var(--primary), #ff85a2);
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="phone">
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div id="status-time">12:00</div>
+    <div class="status-icons">
+      <span>Habiba 5G</span>
+      <span>💖 100%</span>
+    </div>
+  </div>
+
+  <!-- 1. SPLASH SCREEN -->
+  <div id="splash-screen" class="screen active">
+    <div class="splash-logo">
+      <svg viewBox="0 0 24 24" fill="url(#heartGrad)">
+        <defs>
+          <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff5e97"/>
+            <stop offset="100%" stop-color="#ffd166"/>
+          </linearGradient>
+        </defs>
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <div class="splash-title">Habiba OS 💖</div>
+    <div class="splash-sub">جاري تحميل عالم حبوبة الخاص...</div>
+    <div class="loader-bar">
+      <div class="loader-fill" id="splash-bar"></div>
+    </div>
+  </div>
+
+  <!-- 2. LOCK SCREEN -->
+  <div id="lock-screen" class="screen">
+    <div class="lock-top">
+      <div class="lock-Clock" id="lock-clock">12:00</div>
+      <div class="lock-date" id="lock-date">الثلاثاء، ٢٠ أكتوبر</div>
+      <div class="lock-notif">
+        <div class="notif-icon">💌</div>
+        <div class="notif-text" style="text-align: right;">
+          <h4>نظام حبوبة الذكي</h4>
+          <p>رسالة جديدة من شخص بيحبك جداً ❤️</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pass-section">
+      <div class="pass-prompt">اكتبي الباسورد عشان تفتحي عالمك 🔒</div>
+      <div class="pass-display" id="pass-display">_ _ / _ _ / _ _ _ _</div>
+      <div class="pass-hint" id="pass-hint">تلميح: تاريخ ميلادي (يوم شهر سنة) 😉</div>
+      <div class="keypad">
+        <div class="key" onclick="pressKey('1')">1</div>
+        <div class="key" onclick="pressKey('2')">2</div>
+        <div class="key" onclick="pressKey('3')">3</div>
+        <div class="key" onclick="pressKey('4')">4</div>
+        <div class="key" onclick="pressKey('5')">5</div>
+        <div class="key" onclick="pressKey('6')">6</div>
+        <div class="key" onclick="pressKey('7')">7</div>
+        <div class="key" onclick="pressKey('8')">8</div>
+        <div class="key" onclick="pressKey('9')">9</div>
+        <div class="key" onclick="clearPass()" style="font-size:14px;">مسح</div>
+        <div class="key" onclick="pressKey('0')">0</div>
+        <div class="key" onclick="delKey()">⌫</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. HOME SCREEN -->
+  <div id="home-screen" class="screen">
+    <div>
+      <div class="welcome-banner">
+        <h2>أهلاً يا حبوبة 🌸</h2>
+        <span>نسخة خاصة لحبيبة ❤️</span>
+      </div>
+
+      <!-- Counter Widget -->
+      <div class="counter-widget">
+        <div class="counter-title">✨ حكايتنا الحلوة بدأت من (3 / 9 / 2026) ✨</div>
+        <div class="counter-grid">
+          <div class="count-box">
+            <div class="count-num" id="c-days">0</div>
+            <div class="count-label">يوم</div>
+          </div>
+          <div class="count-box">
+            <div class="count-num" id="c-hours">0</div>
+            <div class="count-label">ساعة</div>
+          </div>
+          <div class="count-box">
+            <div class="count-num" id="c-mins">0</div>
+            <div class="count-label">دقيقة</div>
+          </div>
+          <div class="count-box">
+            <div class="count-num" id="c-secs">0</div>
+            <div class="count-label">ثانية</div>
+          </div>
+        </div>
+        <div class="counter-sub">وكل ثانية بتعدي بحبك فيها أكتر من اللي قبلها ♾️</div>
+      </div>
+    </div>
+
+    <!-- Apps Grid -->
+    <div class="apps-grid">
+      <div class="app-item" onclick="openApp('galaxy-screen')">
+        <div class="app-icon icon-galaxy">🌌</div>
+        <div class="app-name">مجرتنا</div>
+      </div>
+      <div class="app-item" onclick="openApp('jar-screen')">
+        <div class="app-icon icon-jar">🫙</div>
+        <div class="app-name">برطمان السعادة</div>
+      </div>
+      <div class="app-item" onclick="openApp('openwhen-screen')">
+        <div class="app-icon icon-open">💌</div>
+        <div class="app-name">افتحيها لما...</div>
+      </div>
+      <div class="app-item" onclick="openApp('chat-screen')">
+        <div class="app-icon icon-chat">💬</div>
+        <div class="app-name">كلميني</div>
+      </div>
+      <div class="app-item" onclick="openApp('scanner-screen')">
+        <div class="app-icon icon-scan">👆</div>
+        <div class="app-name">بصمة القمر</div>
+      </div>
+      <div class="app-item" onclick="openApp('vip-screen')">
+        <div class="app-icon icon-vip">👑</div>
+        <div class="app-name">شهادة حبوبة</div>
+      </div>
+    </div>
+
+    <div class="home-dock">
+      صُنع بكل حب مخصوص عشان عيون حبيبة 💖
+    </div>
+  </div>
+
+  <!-- ================= APP 1: GALAXY ================= -->
+  <div id="galaxy-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">🌌 مجرتنا الخاصة</div>
+      <div id="star-progress" style="font-size:13px; color:var(--secondary);">0 / 7 ⭐</div>
+    </div>
+    <div class="app-body" id="galaxy-map">
+      <div class="galaxy-hint" id="galaxy-hint">المسي كل النجوم عشان تكتشفي السر ✨</div>
+      <svg id="constellation-svg"></svg>
+      <div id="stars-container"></div>
+
+      <!-- Unlocked Big Star -->
+      <div id="big-star" onclick="openBigStar()">
+        <div class="big-star-circle">🌟</div>
+        <div class="star-label" style="color:var(--gold); font-size:13px; margin-top:6px;">نجمة حبيبة الكبيرة (افتحيها ❤️)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APP 2: HAPPINESS JAR ================= -->
+  <div id="jar-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">🫙 برطمان السعادة</div>
+      <div style="font-size:12px;">20 سبب 💖</div>
+    </div>
+    <div class="app-body">
+      <div class="jar-wrapper">
+        <p style="font-size:14px; color:var(--secondary);">دوسي على البرطمان عشان تسحبي ورقة تعرفي بحبك ليه 👇</p>
+        
+        <div class="jar-svg-box" id="jar-box" onclick="drawJarNote()">
+          <svg viewBox="0 0 160 200" width="100%" height="100%">
+            <!-- Jar Lid -->
+            <rect x="45" y="10" width="70" height="18" rx="6" fill="#ffd166" stroke="#fff" stroke-width="2"/>
+            <rect x="50" y="28" width="60" height="8" fill="#e0a938"/>
+            <!-- Jar Body -->
+            <path d="M40 36 Q25 50 25 75 L25 165 Q25 188 50 188 L110 188 Q135 188 135 165 L135 75 Q135 50 120 36 Z" 
+                  fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.6)" stroke-width="3"/>
+            <!-- Colorful folded papers & hearts inside -->
+            <rect x="40" y="140" width="28" height="18" rx="4" transform="rotate(-15 40 140)" fill="#ff5e97"/>
+            <rect x="75" y="150" width="28" height="18" rx="4" transform="rotate(12 75 150)" fill="#ffd166"/>
+            <rect x="95" y="125" width="28" height="18" rx="4" transform="rotate(-25 95 125)" fill="#a29bfe"/>
+            <rect x="50" y="115" width="28" height="18" rx="4" transform="rotate(8 50 115)" fill="#55efc4"/>
+            <rect x="70" y="95" width="28" height="18" rx="4" transform="rotate(-10 70 95)" fill="#ff7675"/>
+            <text x="65" y="85" font-size="26">💖</text>
+            <text x="42" y="115" font-size="20">✨</text>
+            <text x="95" y="110" font-size="22">🌸</text>
+          </svg>
+        </div>
+
+        <div class="jar-note-card" id="jar-card">
+          <div class="jar-note-num" id="jar-num">برطمان حبوبة السري</div>
+          <div class="jar-note-text" id="jar-text">المسي البرطمان أو الزرار اللي تحت وهتطلعلك ورقة مكتوب فيها سر من قلبي ليكي ❤️</div>
+        </div>
+
+        <button class="jar-btn" onclick="drawJarNote()">اسحبي ورقة عشوائية 💌</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APP 3: OPEN WHEN ================= -->
+  <div id="openwhen-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">💌 افتحيها لما...</div>
+      <div style="font-size:12px;">8 رسائل</div>
+    </div>
+    <div class="app-body">
+      <div class="envelopes-list" id="envelopes-container"></div>
+    </div>
+  </div>
+
+  <!-- ================= APP 4: MINI CHAT ================= -->
+  <div id="chat-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">💬 شات الطوارئ لحبوبة</div>
+      <div style="font-size:12px; color:#55efc4;">● متصل دائماً</div>
+    </div>
+    <div class="app-body">
+      <div class="chat-messages" id="chat-box">
+        <div class="bubble him">أهلاً يا كتكوتتي ❤️ أنا موجود معاكي هنا في أي وقت حتى لو مفيش نت.. قوليلي حاسة بإيه دلوقتي؟ 👇</div>
+      </div>
+      <div class="chat-options">
+        <button class="chat-btn" onclick="sendChat(0)">«أنا مضايقة» 😤</button>
+        <button class="chat-btn" onclick="sendChat(1)">«وحشتني» 🥺</button>
+        <button class="chat-btn" onclick="sendChat(2)">«تعبانة/مضغوطة» 📚</button>
+        <button class="chat-btn" onclick="sendChat(3)">«مبسوطة» 🎉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APP 5: FINGERPRINT SCANNER ================= -->
+  <div id="scanner-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">👆 مقياس وبصمة القمر</div>
+      <div style="font-size:12px;">حساس ذكي</div>
+    </div>
+    <div class="app-body">
+      <div class="scanner-wrap">
+        <p style="font-size:14px; color:var(--secondary);">حطي صباعك هنا وافضلي دايسة ثانية عشان الموبايل يحلل نسبة حلاوتك النهاردة ✨</p>
+        
+        <div class="fp-pad" id="fp-pad" 
+             onmousedown="startScan()" onmouseup="cancelScan()" 
+             ontouchstart="startScan(event)" ontouchend="cancelScan()">
+          <div class="scan-laser"></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"/>
+            <path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"/>
+            <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/>
+            <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/>
+            <path d="M8.65 22c.21-.66.45-1.32.57-2"/>
+            <path d="M14 13.12c0 2.38 0 6.38-1 8.88"/>
+            <path d="M2 16h.01"/>
+            <path d="M21.8 16c.2-2 .131-5.354 0-6"/>
+            <path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"/>
+          </svg>
+        </div>
+
+        <div class="scan-result-box" id="scan-result">
+          <div style="color:#aaa; font-size:14px;">مستني بصمة أحلى صباع في الكون... 👆💖</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APP 6: VIP CERTIFICATE ================= -->
+  <div id="vip-screen" class="screen">
+    <div class="app-header">
+      <button class="back-btn" onclick="goHome()">🏠 الرئيسية</button>
+      <div class="app-title">👑 شهادة حبوبة المعتمدة</div>
+      <div style="font-size:12px;">VIP</div>
+    </div>
+    <div class="app-body" style="display:flex; align-items:center;">
+      <div class="cert-card">
+        <div class="cert-badge">👑🏆💖</div>
+        <div class="cert-title">شهادة ملكية القلوب الرسمية</div>
+        <p style="font-size:13px; color:var(--secondary);">يشهد هذا النظام الذكي بأن الكتكوتة والبطلة:</p>
+        <div class="cert-name">✨ حبيبة (حبوبة) ✨</div>
+        <div class="cert-body">
+          هي صاحبة أطيب قلب، وأحلى ضحكة وغمازة، وأشطر وأجدع بنت في المجرة كلها. 
+          تم منحها صلاحيات كاملة ومطلقة على قلبي مدى الحياة بدون أي شروط!
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--gold); border-top:1px solid rgba(255,255,255,0.15); padding-top:12px;">
+          <span>التاريخ: 3 / 9 / 2026 ♾️</span>
+          <span>الختم الرسمي: بحبك ❤️</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FOR MESSAGES -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-card">
+      <div class="modal-icon" id="m-icon">⭐</div>
+      <div class="modal-title" id="m-title">عنوان الرسالة</div>
+      <div class="modal-text" id="m-text">النص هنا</div>
+      <button class="modal-close" onclick="closeModal()">حفظ في قلبي ❤️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ================= AUDIO SYNTHESIZER (100% OFFLINE SOUND) ================= */
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx = null;
+
+  function playTone(freq = 520, duration = 0.15, type = 'sine') {
+    try {
+      if (!audioCtx) audioCtx = new AudioCtx();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+  }
+
+  function playChime() {
+    playTone(523.25, 0.15);
+    setTimeout(() => playTone(659.25, 0.18), 100);
+    setTimeout(() => playTone(783.99, 0.25), 200);
+  }
+
+  /* ================= 1. SPLASH & CLOCK ================= */
+  window.addEventListener('DOMContentLoaded', () => {
+    const bar = document.getElementById('splash-bar');
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 25;
+      bar.style.width = progress + '%';
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          document.getElementById('splash-screen').classList.remove('active');
+          document.getElementById('lock-screen').classList.add('active');
+        }, 400);
+      }
+    }, 350);
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    updateCounter();
+    setInterval(updateCounter, 1000);
+    initGalaxy();
+    initEnvelopes();
+    initBgParticles();
+  });
+
+  function updateClock() {
+    const now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+    h = h % 12 || 12;
+    const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    document.getElementById('status-time').textContent = timeStr;
+    document.getElementById('lock-clock').textContent = timeStr;
+    const options = { weekday: 'long', month: 'long', day: 'numeric' };
+    document.getElementById('lock-date').textContent = now.toLocaleDateString('ar-EG', options);
+  }
+
+  /* ================= 2. LOCK SCREEN PASSCODE (24102009) ================= */
+  let currentPass = "";
+  const TARGET_PASS = "24102009";
+
+  function formatPassDisplay(str) {
+    let padded = str.padEnd(8, '_');
+    return `${padded.slice(0,2)} / ${padded.slice(2,4)} / ${padded.slice(4,8)}`;
+  }
+
+  function pressKey(num) {
+    playTone(600, 0.08);
+    if (currentPass.length < 8) {
+      currentPass += num;
+      document.getElementById('pass-display').textContent = formatPassDisplay(currentPass);
+      if (currentPass.length === 8) {
+        checkPass();
+      }
+    }
+  }
+
+  function delKey() {
+    playTone(400, 0.08);
+    currentPass = currentPass.slice(0, -1);
+    document.getElementById('pass-display').textContent = formatPassDisplay(currentPass);
+  }
+
+  function clearPass() {
+    playTone(350, 0.1);
+    currentPass = "";
+    document.getElementById('pass-display').textContent = formatPassDisplay(currentPass);
+  }
+
+  function checkPass() {
+    if (currentPass === TARGET_PASS) {
+      playChime();
+      if (navigator.vibrate) navigator.vibrate(100);
+      document.getElementById('lock-screen').classList.remove('active');
+      document.getElementById('home-screen').classList.add('active');
+    } else {
+      playTone(200, 0.3, 'sawtooth');
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+      const disp = document.getElementById('pass-display');
+      disp.classList.add('shake');
+      document.getElementById('pass-hint').textContent = "ركزي يا حبوبة 😂 اكتبي: 24102009";
+      setTimeout(() => {
+        disp.classList.remove('shake');
+        clearPass();
+      }, 500);
+    }
+  }
+
+  /* ================= 3. NAVIGATION & COUNTER (3/9/2026) ================= */
+  function openApp(screenId) {
+    playChime();
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+  }
+
+  function goHome() {
+    playTone(480, 0.1);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('home-screen').classList.add('active');
+  }
+
+  const startDate = new Date(2026, 8, 3, 0, 0, 0); // Month 8 is September (0-indexed)
+  function updateCounter() {
+    const now = new Date();
+    let diff = Math.abs(now - startDate);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / 1000 / 60) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    document.getElementById('c-days').textContent = days;
+    document.getElementById('c-hours').textContent = hours;
+    document.getElementById('c-mins').textContent = mins;
+    document.getElementById('c-secs').textContent = secs;
+  }
+
+  /* ================= 4. APP 1: OUR GALAXY ================= */
+  const galaxyStars = [
+    { id: 0, title: "⭐ نجمة الطيبة", x: 50, y: 16, text: "فيكي طيبة نادرة، بتبان في أتفه التفاصيل من غير ما تحاولي. ودي أجمل حاجة بتخلي أي حد قريب منك يحس بالأمان." },
+    { id: 1, title: "⭐ نجمة العزيمة", x: 82, y: 27, text: "لو قررتي حاجة، مفيش حاجة توقفك. عزيمتك دي مش بس بتخليني فخور بيكي… دي بتعلمني منك." },
+    { id: 2, title: "⭐ نجمة الإصرار", x: 84, y: 58, text: "بتكملي حتى لما تكوني تعبانة، وبتدي كل حاجة آخر طاقة. عشان كده أي حاجة بتوصليلها بتبقى مستحقة ومن قلبك." },
+    { id: 3, title: "⭐ نجمة التفوق", x: 50, y: 83, text: "شطارتك وتفوقك مش صدفة… ده تعبك ومجهودك. وأنا فخور بيكي أكتر من أي حد، وبفرح لنجاحك كأنه نجاحي." },
+    { id: 4, title: "⭐ نجمة الكلام", x: 16, y: 58, text: "بحب كلامك وصوتك وطريقتك… كلامك فيه حنية وذكاء، وبيفرق في يومي حتى لو كان عادي." },
+    { id: 5, title: "⭐ نجمة الضحكة", x: 18, y: 27, text: "ضحكتك دي بتغيّر مود أي مكان. يا رب أشوفها دايماً، وتفضل منورة دنيتك ودنيتي." },
+    { id: 6, title: "⭐ نجمة القلب", x: 50, y: 46, text: "كل حاجة فيكي حلوة… طيبتك، قوتك، زعلك، صالحك، وحتى تفاصيلك الصغيرة. إنتي ببساطة أحلى حاجة في مجرتي." }
+  ];
+
+  const bigStarMessage = `كل سنة وانتي أحلى حاجة في يومي، وأجمل نجمة في مجرتي ❤️
+
+النهارده يومك إنتي… يوم النجمة اللي بتحبها كل حاجة فيها: طيبة قلبها، عزيمتها، إصرارها، وتفوقها. إنتي من النوع اللي لما يحب يعمل حاجة يعملها بقلبه كله، وده اللي بيخليني فخور بيكي كل يوم.
+
+يا رب تكون السنة دي مليانة فرح، ونجاح، وضحكة من القلب. ويا رب تحققي كل حاجة نفسك فيها، وتفضلي دايماً قوية وحنينة وواثقة إنك قد الدنيا كلها.
+
+وأنا هنا… عشان أفرح معاكي، وأقف جنبك، وأحبك أكتر كل يوم.
+
+كل سنة وانتي طيبة يا أحلى نجمة 🌌❤️`;
+
+  let visitedStars = new Set();
+
+  function initGalaxy() {
+    const container = document.getElementById('stars-container');
+    galaxyStars.forEach(s => {
+      const node = document.createElement('div');
+      node.className = 'star-node';
+      node.id = 'star-' + s.id;
+      node.style.left = s.x + '%';
+      node.style.top = s.y + '%';
+      node.innerHTML = `<div class="star-circle">⭐</div><div class="star-label">${s.title.replace('⭐ ', '')}</div>`;
+      node.onclick = () => clickStar(s);
+      container.appendChild(node);
+    });
+  }
+
+  function clickStar(star) {
+    playChime();
+    visitedStars.add(star.id);
+    document.getElementById('star-' + star.id).classList.add('visited');
+    document.getElementById('star-progress').textContent = `${visitedStars.size} / 7 ⭐`;
+    showModal('⭐', star.title, star.text);
+
+    if (visitedStars.size === 7) {
+      drawConstellation();
+      document.getElementById('galaxy-hint').textContent = "🎉 اكتملت المجرة! افتحي النجمة الكبيرة في النص ❤️";
+      document.getElementById('big-star').classList.add('unlocked');
+    }
+  }
+
+  function drawConstellation() {
+    const svg = document.getElementById('constellation-svg');
+    const order = [0, 1, 2, 3, 4, 5, 0];
+    let linesHTML = '';
+    for (let i = 0; i < order.length - 1; i++) {
+      const s1 = galaxyStars[order[i]];
+      const s2 = galaxyStars[order[i+1]];
+      linesHTML += `<line x1="${s1.x}%" y1="${s1.y}%" x2="${s2.x}%" y2="${s2.y}%" stroke="#ffd166" stroke-width="2" stroke-dasharray="6,6" opacity="0.8"/>`;
+    }
+    svg.innerHTML = linesHTML;
+  }
+
+  function openBigStar() {
+    playChime();
+    if (navigator.vibrate) navigator.vibrate([100, 60, 200]);
+    showModal('🌟', 'نجمة حبوبة الكبيرة ❤️', bigStarMessage);
+  }
+
+  /* ================= 5. APP 2: HAPPINESS JAR ================= */
+  const jarReasons = [
+    "بحب طيبة قلبك اللي بتبان في أتفه التفاصيل.",
+    "بحب إنك بتحسي بغيرك قبل ما حد يقول.",
+    "بحب عزيمتك… لو قررتي حاجة، مفيش حاجة توقفك.",
+    "بحب إصرارك وإنك بتكملي حتى لما تكوني تعبانة.",
+    "بحب إنك بتدي كل حاجة آخر طاقة وكأنك بتثبتي للدنيا إنك قدها.",
+    "بحب شطارتك وتفوقك وإنك دايمًا بتفاجئيني.",
+    "بحب إن نجاحك مش صدفة… ده تعبك ومجهودك.",
+    "بحب كلامك… صوتك وطريقتك.",
+    "بحب إن كلامك فيه حنية وذكاء في نفس الوقت.",
+    "بحب ضحكتك ❤️.",
+    "بحب زعلك السريع وصالحك الأسرع.",
+    "بحب إنك قوية من بره وحنينة من جوه.",
+    "بحب إنك بتخافي على اللي بتحبيه بجد.",
+    "بحب تفاصيلك الصغيرة اللي محدش يلاحظها غيري.",
+    "بحب إنك بتعلميني الصبر والإصرار من غير ما تقصدي.",
+    "بحب إنك لما تحبي حاجة تعمليها بقلبك كله.",
+    "بحب إنك جميلة من غير ما تحاولي.",
+    "بحب إن وجودك بيخلي أي يوم عادي يبقى أحلى.",
+    "بحب إنك إنتي… كل حاجة فيكي حلوة، حتى عيوبك مع اني مشفتش فيكي عيب بس هحبه لو اكتشفت اصلا بس ما اظنش اني هكتشف عيب فيكي.",
+    "بحبك عشان بحس إن قلبي اختار صح."
+  ];
+
+  let jarIndex = 0;
+
+  function drawJarNote() {
+    playChime();
+    if (navigator.vibrate) navigator.vibrate(60);
+    const jarBox = document.getElementById('jar-box');
+    jarBox.classList.remove('jar-wobble');
+    void jarBox.offsetWidth;
+    jarBox.classList.add('jar-wobble');
+
+    document.getElementById('jar-num').textContent = `السبب رقم #${jarIndex + 1} من 20 💖`;
+    document.getElementById('jar-text').textContent = jarReasons[jarIndex];
+    jarIndex = (jarIndex + 1) % jarReasons.length;
+  }
+
+  /* ================= 6. APP 3: OPEN WHEN ENVELOPES ================= */
+  const envelopesData = [
+    { icon: "🥺", title: "افتحيها لما تكوني زعلانة مني", msg: "مبدأيًا مستحيل أزعلك، بس لو لا قدر الله وحصل عاوزك تعرفي إن والله ميهونش عليا زعلك أبداً ولا أقدر أقعد يوم من غير ما نكون صافيين.. حقك عليا يا ستي، اضحكي بقى وابعتيلي على الواتس قوليلي إنك سامحتيني 😂❤️" },
+    { icon: "📚", title: "افتحيها لما تكوني مضغوطة وتعبانة من المذاكرة", msg: "سيبي اللي في إيدك ثواني وخدي نفس عميق.. إنتي أشطر وأجدع واحدة في الدنيا، والتعب ده كله هيروح وهتفرحي بالنتيجة في الآخر. أنا فخور بيكي أوي وواثق إنك قدها، قومي اعملي حاجة تشربيها وكملي يا بطلة!" },
+    { icon: "🎉", title: "افتحيها لما تكوني فرحانة أوي", msg: "يا رب دايماً أشوفك مبسوطة وضحكتك منورة الدنيا، فرحتك دي هي اللي بتفرح قلبي.. احكيلي يلا بسرعة إيه اللي مفرحك يا كتكوتة عشان أفرح معاكي!" },
+    { icon: "🎓", title: "افتحيها لما تنجحي أو تخلصي حاجة كنتي تعبانة فيها", msg: "ألف مبروك يا بطلة! أنا فخور بيكي أكتر من أي حد في الدنيا. تعبك ومجهودك مكنوش هدر، وأنا كنت عارف إنك قدها. يلا احكيلي كل حاجة عشان أفرح معاكي." },
+    { icon: "🌸", title: "افتحيها لما تحسي إنك مش عاجبة نفسك أو ثقتك في نفسك بتقل", msg: "اسمعي الكلام ده كويس: إنتي حلوة، وجدعة، وقلبك من أجمل الحاجات اللي حصلتلي. متخليش يوم وحش يخليكي تشكي في نفسك. أنا شايفك أحلى واحدة في الدنيا، وده مش مجاملة." },
+    { icon: "🤍", title: "افتحيها لما تحسي إنك لوحدك أو محتاجة حد يسمعك", msg: "أنا موجود. مش لازم يكون في كلام معين، ولا لازم تكوني مبسوطة. لو عايزة تحكي، أنا سامع. ولو عايزة تسكتي، أنا معاكي في السكوت. إنتي مش لوحدك أبدًا." },
+    { icon: "☀️", title: "افتحيها لما تصحي الصبح", msg: "صباح الخير يا أحلى حاجة في يومي. يا رب يكون يومك لطيف زي قلبك، ومتبدأيش يومك من غير ما تبتسمي. أنا ابتسمت وأنا بكتبلك ده، فابتدئي يومك بضحكة عشاني ❤️" },
+    { icon: "💌", title: "افتحيها لما تكوني عايزة تعرفي إني بحبك ليه", msg: "مش بحبك لسبب واحد، بحبك لأنك إنتي. بحب طريقتك، زعلك، ضحكتك، حتى لما بتعندي. بحبك لأني معاكي بحس إني في مكاني الصح. وده مش كلام وخلاص… ده الحقيقة." }
+  ];
+
+  function initEnvelopes() {
+    const container = document.getElementById('envelopes-container');
+    envelopesData.forEach(env => {
+      const div = document.createElement('div');
+      div.className = 'env-card';
+      div.innerHTML = `<div class="env-icon">${env.icon}</div><div class="env-title">${env.title}</div>`;
+      div.onclick = () => {
+        playChime();
+        showModal(env.icon, env.title, env.msg);
+      };
+      container.appendChild(div);
+    });
+  }
+
+  /* ================= 7. APP 4: MINI CHAT ================= */
+  const chatPairs = [
+    { q: "أنا مضايقة 😤", a: "مين ضايق كتكوتي؟ 😤 قوليلي بسرعة… وأنا أهو، ميهونش عليا زعلك أبدًا. لو أنا السبب حقك عليا، ولو مش أنا تعالى أحضنك بالكلام. بس اضحكي بقى وابعتيلي «سامحتك ده لو انا السبب 🙄» 😂❤️" },
+    { q: "وحشتني 🥺", a: "وانتي وحشتيني أكتر والله… حتى لو لسه متكلمين من شويه.😂❤️" },
+    { q: "تعبانة / مضغوطة 📚", a: "سيبي اللي في إيدك دقيقتين… خدي نفس عميق، اشربي حاجة، وارجعي. إنتي أشطر واحدة وأنا فخور بيكي. ولو تعبانة بجد ارتاحي، مش لازم تخلصي الدنيا النهارده ❤️" },
+    { q: "مبسوطة 🎉", a: "يا رب دايماً أشوفك مبسوطة! احكيلي بسرعة إيه اللي مفرحك عشان أفرح معاكي. ضحكتك دي بتعمل يومي كله، متخبيش عني حاجة 😂❤️" }
+  ];
+
+  function sendChat(idx) {
+    playTone(550, 0.1);
+    const box = document.getElementById('chat-box');
+    const item = chatPairs[idx];
+
+    const herMsg = document.createElement('div');
+    herMsg.className = 'bubble her';
+    herMsg.textContent = item.q;
+    box.appendChild(herMsg);
+    box.scrollTop = box.scrollHeight;
+
+    setTimeout(() => {
+      playChime();
+      const hisMsg = document.createElement('div');
+      hisMsg.className = 'bubble him';
+      hisMsg.textContent = item.a;
+      box.appendChild(hisMsg);
+      box.scrollTop = box.scrollHeight;
+    }, 550);
+  }
+
+  /* ================= 8. APP 5: FINGERPRINT SCANNER ================= */
+  const scanReports = [
+    { line: "يخرب بيت غمازتك 😂❤️", rate: "1000%", note: "النظام فصل من كتر حلاوة الغمازة والضحكة!" },
+    { line: "اي الحلاوه دي يا بنت 😂💖", rate: "9999%", note: "خطر على قلبي والله، ارحميني شوية!" },
+    { line: "أحلى وأشطر كتكوتة في المجرة 🌟", rate: "مليون %", note: "طيبة القلب والجدعنة معديين كل المقاييس." },
+    { line: "قمر ١٤ نازل على الأرض 🌙😍", rate: "فوق الخيال", note: "نصيحة النظام: اضحكي عشان ضحكتك بتنور يومي." },
+    { line: "مفيش منك اتنين يا حبوبة 👑❤️", rate: "اللانهائية ♾️", note: "تم التأكد إنك أحلى حاجة حصلت في حياتي." }
+  ];
+
+  let scanIdx = 0;
+  let scanTimer = null;
+
+  function startScan(e) {
+    if (e) e.preventDefault();
+    const pad = document.getElementById('fp-pad');
+    pad.classList.add('scanning');
+    playTone(440, 0.3);
+    if (navigator.vibrate) navigator.vibrate(200);
+    document.getElementById('scan-result').innerHTML = `<div style="color:var(--gold);">جاري تحليل بصمة حبوبة... 🔍✨</div>`;
+
+    scanTimer = setTimeout(() => {
+      pad.classList.remove('scanning');
+      playChime();
+      if (navigator.vibrate) navigator.vibrate([80, 50, 120]);
+      const rep = scanReports[scanIdx];
+      scanIdx = (scanIdx + 1) % scanReports.length;
+
+      document.getElementById('scan-result').innerHTML = `
+        <div style="font-size:12px; color:var(--secondary);">✅ تم التعرف على البصمة: حبيبة قلبي</div>
+        <div class="scan-Compliment">"${rep.line}"</div>
+        <div style="font-size:13px; color:#fff; margin-bottom:4px;">نسبة الحلاوة النهاردة: <b style="color:#55efc4;">${rep.rate}</b></div>
+        <div style="font-size:12px; color:#ddd;">💡 ${rep.note}</div>
+      `;
+    }, 1100);
+  }
+
+  function cancelScan() {
+    const pad = document.getElementById('fp-pad');
+    if (pad.classList.contains('scanning')) {
+      clearTimeout(scanTimer);
+      pad.classList.remove('scanning');
+    }
+  }
+
+  /* ================= MODAL CONTROLS ================= */
+  function showModal(icon, title, text) {
+    document.getElementById('m-icon').textContent = icon;
+    document.getElementById('m-title').textContent = title;
+    document.getElementById('m-text').textContent = text;
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function closeModal() {
+    playTone(450, 0.08);
+    document.getElementById('modal').classList.remove('show');
+  }
+
+  /* ================= BACKGROUND CANVAS PARTICLES ================= */
+  function initBgParticles() {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const particles = Array.from({ length: 35 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + 0.8,
+      dy: -(Math.random() * 0.4 + 0.15),
+      alpha: Math.random() * 0.6 + 0.2
+    }));
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 184, 209, ${p.alpha})`;
+        ctx.fill();
+        p.y += p.dy;
+        if (p.y < 0) p.y = canvas.height;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+</script>
+</body>
+</html>
